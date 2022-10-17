@@ -6,11 +6,10 @@ class parser:
     # 3-tuple: (intervention, outcome, measurement)
     processed_data = []
 
-
     def __init__(self, data=[]):
         self.processed_data = data
 
-
+    # processes one outcome
     def process_result(self, result):
         outcomeMeasureTitle = result["OutcomeMeasureTitle"]
         outcomeGroup = result['OutcomeGroupList']['OutcomeGroup']
@@ -29,7 +28,7 @@ class parser:
             self.processed_data.append((outcomesMap[id]["intervention"], 
                                         outcomeMeasureTitle, outcomesMap[id]["measurement"]))
 
-
+    # parser starter function
     def start(self, NCTId):
         response = requests.get('http://ClinicalTrials.gov/api/query/full_studies', 
             params={   
@@ -49,11 +48,12 @@ class parser:
 
 if __name__ == '__main__':
     myParser = parser()
+    # tuple list
     processed_data = myParser.start("NCT02684370")
 
+    # write to a csv
     with open("processed_data.csv", "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        
         for tuple in processed_data:
             writer.writerow(tuple)
         
